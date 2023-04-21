@@ -1,87 +1,142 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
+public class healthCare extends JFrame implements KeyListener {
+    JPanel p = new JPanel();
+    JTextArea dialog = new JTextArea(20,50);
+    JTextArea input = new JTextArea(1,50);
 
-class chat extends JFrame {
-    JTextArea ar = new JTextArea();
-    JTextField fl = new JTextField();
+    String chatBot[][] = {
 
-    JButton btn = new JButton();
+            {"hi"},
+            {"Welcome to our 24X7 Online AlphaX HealthCare ChatBot System."},
 
-    JLabel la = new JLabel();
+            {"weakness", "body pain", "shivering", "chills", "irritated", "headache"},
+            {"You might have fever." + "\n" + "For quick relief you can take medicine - Dolo 650, Paracetamol." + "\n" + "Nearest Medicial Shop - Uni-Hospital, LPU"},
 
+            {"sore throat", "dry cough", "ruuny nose", "getting cold"},
+            {"You might have cold." + "\n" + "For quick relief you can take medicine - Cetriz, Zolrex-D, Viscodyne-D." + "\n" + "Nearest Medicial Shop - Uni-Hospital, LPU"},
 
-    chat(){
-        JFrame fr = new JFrame();
-        fr.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        fr.setVisible(true);
-        fr.setResizable(false);
-        fr.setLayout(null);
-        fr.setSize(400, 600);
-        fr.getContentPane().setBackground(Color.BLACK);
-        fr.setTitle("LPU UNI HOSPITOL CHATBOT");
+            {"dizziness", "faint", "sleepiness", "tired"},
+            {"You might have weakness." + "\n" + "For quick relief you can take medicine - AtoZ Syrup, Vitamine tablet." + "\n" + "Nearest Medicial Shop - Uni-Hospital, LPU"},
 
-        fr.add(ar);
-        fr.add(fl);
+            {"acidity", "vomating"},
+            {"You might have stomach problem." + "\n" + "For quick relief you can take medicine - Eno, Pantop-D." + "\n" + "Nearest Medicial Shop - Uni-Hospital, LPU"},
 
-        ar.setSize(300, 310);
-        ar.setLocation(50, 1);
-        ar.setBackground(Color.white);
+            {"short temper"},
+            {"You might have BP." + "\n" + "For quick relief you can take medicine - Pinon a20, Benazerpril." + "\n" + "Nearest Medicial Shop - Uni-Hospital, LPU"},
 
-        fl.setSize(300, 20);
-        fl.setLocation(1, 320);
+            {"blured vision"},
+            {"You might have Eye Problem." + "\n" + "For quick relief you can take medicine - Ciplox Eye Drops." + "\n" + "Nearest Medicial Shop - Uni-Hospital, LPU"},
 
-        fr.add(btn);
-        la.setText("SEND");
-        btn.add(la);
-        btn.setSize(400, 20);
-        btn.setLocation(300, 320);
+    };
 
+    JScrollPane scroll = new JScrollPane(
+            dialog,
+            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+    );
 
-        btn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(e.getSource() == btn) {
-                    String str = fl.getText().toLowerCase();
-                    ar.append("You : " + str + "\n");
-                    fl.setText("");
-
-                    if(str.contains("weakness") || str.contains("body pain") || str.contains("shivering") || str.contains("chills") || str.contains("irritated") || str.contains("headache")) {
-                        response("You might have fever." + "\n" + "For quick relief you can take medicine - dolo, paracetamol." + "\n" + "Nearest Medical shop - Uni-Hospital, LPU");
-
-                    } else if (str.contains("sore throat") || str.contains("dry cough") || str.contains("runny nose") || str.contains("getting cold")) {
-                        response("You might have cold." + "\n" + "For quick relief you can take medicine - Cetriz, Zolrex-D, Viscodyne-D." + "\n" + "Nearest Medical shop - Uni-Hospital, LPU");
-
-                    } else if (str.contains("dizziness") || str.contains("faint") || str.contains("sleepiness") || str.contains("tired")) {
-                        response("You might have weakness." + "\n" + "For quick relief you can take medicine - AtoZ syrup, Vitamine tablet." + "\n" + "Nearest Medical shop - Uni-Hospital, LPU");
-
-                    } else if (str.contains("acidity") || str.contains("vomating")) {
-                        response("You might have stomach problem." + "\n" + "For quick relief you can take medicine - Eno, Pantop-D." + "\n" + "Nearest Medical shop - Uni-Hospital, LPU");
-
-                    } else if (str.contains("short temper")) {
-                        response("You might have BP." + "\n" + "For quick relief you can take medicine - Pinon a20, Benazepril." + "\n" + "Nearest Medical shop - Uni-Hospital, LPU");
-
-                    } else if (str.contains("blurred vision")) {
-                        response("You might have Eye Problem." + "\n" + "For quick relief you can take medicine - Eye Drops." + "\n" + "Nearest Medical shop - Uni-Hospital, LPU" + "/n" );
-
-                    } else
-                        response("Sorry, I didn't understand your language.");
-                }
-            }
-        });
-    }
-
-    public void response(String s) {
-        ar.append("LPU UNI HOPITOL CHATBOT : " + s + "\n" );
-    }
-
-
-}
-
-public class healthCareChatBot {
     public static void main(String[] args) {
-        new chat();
+        new healthCare();
     }
+
+    public healthCare() {
+        super("AlphaX HealthCare ChatBot");
+        setSize(600,400);
+        setResizable(false);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        dialog.setEditable(false);
+        input.addKeyListener(this);
+        p.add(scroll);
+        p.add(input);
+        p.setBackground(new Color(255,200,0));
+        add(p);
+        setVisible(true);
+    }
+
+    public void keyPressed(KeyEvent arg0) {
+        // TODO Auto-generated method stub
+        if(arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+            input.setEditable(false);
+
+            //-----grab symptoms----------
+            String s = input.getText(); // s means symptoms
+            input.setText("");
+            addText("\nYou: \t " + s);
+            s = s.trim();
+
+            while(
+                    s.charAt(s.length()-1) == '!' ||
+                            s.charAt(s.length()-1) == '.' ||
+                            s.charAt(s.length()-1) == '?'
+            ) {
+                s = s.substring(0, s.length()-1);
+            }
+
+            s = s.trim();
+
+            byte response =0;
+			/*
+			0: searching
+			1: did not find
+			2: found
+			*/
+
+            //-----check for matches---
+            int j = 0; //Group in ChatBot String array that we are checking
+            while(response == 0) {
+                if(inArray(s.toLowerCase(), chatBot[j*2])) {
+                    response = 2;
+
+                    int r = (int) Math.floor(Math.random() * chatBot[(j*2) + 1].length);
+                    addText("\nAlphaX : \t " + chatBot[ (j*2) + 1 ][r] );
+                }
+
+                j++;
+
+                if( j*2 == chatBot.length-1 && response != 2) {
+                    response = 1;
+                }
+
+                //addText("\n");
+            }
+
+            //-----default-------------
+            if( response==1 ) {
+                int r = (int) Math.floor(Math.random() * chatBot[chatBot.length-1].length);
+                addText("\nAlphaX : " + chatBot[ chatBot.length-1 ][r] );
+            }
+        }
+    }
+
+    public void keyReleased(KeyEvent arg0) {
+        // TODO Auto-generated method stub
+        if(arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+            input.setEditable(true);
+        }
+    }
+
+    public void keyTyped(KeyEvent arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void addText(String str) {
+        dialog.setText(dialog.getText()+str);
+    }
+
+    public boolean inArray(String in, String[] str) {
+        boolean match = false;
+        //length of array is contant so it is stored in variable length unlike for String object which is done using methof length()
+        for(int i=0; i < str.length; i++) {
+            if(str[i].equals(in)) {
+                match = true;
+            }
+        }
+        return match;
+    }
+
 }
